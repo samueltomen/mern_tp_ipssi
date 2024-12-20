@@ -39,7 +39,7 @@ const AnnonceDetails = () => {
         </div>
         <div className="details-body">
           <img
-            src={annonce.image || "/placeholder.jpg"}
+            src={annonce.image || "../src/assets/bonnet.png"}
             alt={annonce.title}
             className="details-image"
           />
