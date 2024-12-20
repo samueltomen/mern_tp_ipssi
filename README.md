@@ -1,129 +1,135 @@
-# IpssiProjetSoloMERN
+# MERN_TP_IPSSI
 
-Ce projet est une application MERN (MongoDB, Express, React, Node.js) développée dans le cadre d'un projet individuel à
-l'IPSSI. L'application permet de gérer des annonces (création, édition, suppression, consultation) avec un système
-d'authentification utilisateur.  
-*Note : Le projet est en cours d'implémentation de la sécurité des routes (authentification, autorisation, etc.).*
+## Description
 
-## Sommaire
+Ce projet est une application web construite avec la pile technologique **MERN** (MongoDB, Express, React, Node.js) développée dans le cadre d'un TP à l'IPSSI. L'application permet de gérer des annonces avec des fonctionnalités d'authentification utilisateur.
 
-- [Fonctionnalités](#fonctionnalités)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Démarrage](#démarrage)
-- [Architecture du Projet](#architecture-du-projet)
-- [Technologies Utilisées](#technologies-utilisées)
-- [Authentification et Sécurité](#authentification-et-sécurité)
+---
 
-## Fonctionnalités
+## Fonctionnalités de l'application
 
-- **Authentification utilisateur** : Inscription, connexion et déconnexion.
-- **Gestion des annonces** :
-    - Création d’annonces avec titre, description, prix et catégorie.
-    - Modification et suppression d’annonces (uniquement pour l’utilisateur connecté).
-    - Affichage et filtrage des annonces par catégorie.
-- **Interface utilisateur** :
-    - Utilisation de React et Bootstrap pour une interface moderne et responsive.
-    - Modals pour l’ajout, la modification et la visualisation des annonces.
+### **Authentification**
+- Inscription et connexion des utilisateurs avec gestion des tokens JWT.
+- Protection des routes privées nécessitant une authentification.
 
-## Installation
+### **Gestion des annonces**
+- **CRUD des annonces** :
+    - Création, lecture, mise à jour et suppression des annonces (limitées à l'auteur de l'annonce).
+    - Affichage de toutes les annonces publiques.
+- **Recherche et filtres** :
+    - Recherche d'annonces par mot-clé.
+    - Filtrage des annonces par catégorie.
+- Affichage détaillé d'une annonce incluant le titre, la description, le prix, la catégorie et l'auteur.
 
-1. **Cloner le dépôt** :
-   ```bash
-   git clone https://github.com/EddyTerosier/IpssiProjetSoloMERN.git
-    ```
+### **Interface utilisateur**
+- Frontend moderne et responsive conçu avec **React.js**.
+- Utilisation de cartes pour afficher les annonces.
+- Modals pour créer et modifier des annonces.
 
-2. **Installer les dépendances** :  
-   Dans le dossier racine du projet :
+---
+
+## Prérequis
+
+- **Node.js** (version 14 ou plus).
+- **npm** ou **yarn** pour la gestion des dépendances.
+- **MongoDB** : Une instance de MongoDB locale ou distante.
+
+---
+
+## Installation et lancement du projet
+
+### **1. Cloner le dépôt**
+```bash
+https://github.com/samueltomen/mern_tp_ipssi.git
+cd mern_tp_ipssi
+```
+
+### **2. Configuration du Backend**
+1. Accédez au dossier `backend` :
    ```bash
    cd backend
+   ```
+2. Installez les dépendances :
+   ```bash
    npm install
    ```
-   Puis dans le dossier frontend :
+3. Créez un fichier `.env` pour la configuration des variables d'environnement :
+   ```
+   PORT=5000
+   MONGO_URI=your_mongo_connection_string
+   JWT_SECRET=your_secret_key
+   ```
+4. Lancez le serveur backend :
    ```bash
-    cd frontend
-    npm install
-    ```
-3. **Configuration** :
-   Dans votre dossier backend, créez un fichier .env et ajoutez les variables d'environnement suivantes :
-    ```bash
-    JWT_SECRET=[remplacer ici avec votre secret_key ]
-    JWT_EXPIRES_IN=[remplacer ici pour determiner la durée de vie du token]
-    ``` 
+   npm start
+   ```
+   Le backend sera disponible à l'adresse : `http://localhost:8080`
 
-## Démarrage
-
-1. **Démarrer le serveur** :  
-   Dans le dossier backend du projet :
+### **3. Configuration du Frontend**
+1. Accédez au dossier `frontend` :
    ```bash
-    npm run dev
-    ```
+   cd ../frontend
+   ```
+2. Installez les dépendances :
+   ```bash
+   npm install
+   ```
+3. Créez un fichier `.env` si nécessaire pour définir l'URL du backend :
+   ```
+   REACT_APP_API_URL=http://localhost:5173
+   ```
+4. Lancez le serveur frontend :
+   ```bash
+   npm start
+   ```
+   Le frontend sera disponible à l'adresse : `http://localhost:8080`
 
-2. **Démarrer le client** :
-   Dans le dossier frontend du projet :
-    ```bash
-     npm run dev
-     ```
+---
 
-3. **Accéder à l'application** :
-   Le frontend sera disponible sur http://localhost:5173.
+## Structure du projet
 
-## Architecture du Projet
+```
+mern_tp_ipssi/
+├── backend/               # Code du serveur Node.js
+│   ├── controllers/       # Contrôleurs pour les routes
+│   ├── models/            # Schémas Mongoose
+│   ├── routes/            # Définition des routes API
+│   ├── .env               # Variables d'environnement
+│   └── server.js          # Point d'entrée du backend
+├── frontend/              # Code React.js
+│   ├── src/
+│   │   ├── components/    # Composants React
+│   │   ├── pages/         # Pages principales
+│   │   ├── App.js         # Point d'entrée de l'application
+│   │   └── index.js       # Point d'entrée React
+│   └── public/            # Fichiers publics (HTML, images)
+└── README.md
+```
 
-Backend :
+---
 
-- Models/ : Contient les schémas Mongoose pour les utilisateurs et les annonces.
-- Controllers/ : Contient la logique métier pour la gestion des annonces et des utilisateurs.
-- Routes/ : Définition des routes API (utilisateurs, annonces).
-- Middlewares/ : Contient les middlewares pour l'authentification (JWT).
-- server.js : Point d'entrée principal du serveur Express.
+## Scripts utiles
 
-Frontend :
+### **Backend**
+- `npm start` : Lance le serveur backend en mode production.
+- `npm run dev` : Lance le serveur backend avec **nodemon** pour un rechargement automatique.
 
-- src/ :
-    - components/ : Composants React pour l'interface utilisateur.
-    - context/ : Contexte React pour la gestion de l'authentification.
-    - pages/ : Pages React pour l'application.
-    - App.js : Point d'entrée principal de l'application React.
+### **Frontend**
+- `npm start` : Lance l'application React en mode développement.
+- `npm build` : Compile l'application pour un déploiement en production.
 
-## Packages Utilisés
+---
 
-### Backend
+## Technologies utilisées
 
-- `express` : Framework web pour Node.js.
-- `mongoose` : Outil de modélisation d'objets MongoDB.
-- `bcryptjs` : Hachage de mots de passe.
-- `jsonwebtoken` : Génération et vérification de tokens.
-- `cors` : Activer le partage de ressources entre origines multiples.
-- `dotenv` : Charger les variables d'environnement.
+### **Frontend**
+- React.js
+- CSS pour le style des composants
+- React Router pour la gestion des routes
 
-### Frontend
+### **Backend**
+- Node.js avec Express
+- MongoDB avec Mongoose
+- JSON Web Tokens (JWT) pour l'authentification
 
-- `react` : Bibliothèque JavaScript pour construire des interfaces utilisateur.
-- `react-router-dom` : Bibliothèque de routage pour React.
-- `axios` : Client HTTP.
-- `react-toastify` : Notifications pour React.
-- `bootstrap` : Framework frontend pour le design réactif.
-
-## Technologies Utilisées
-
-- **Backend** :
-    - Node.js
-    - Express
-    - MongoDB
-    - Mongoose
-    - JWT (JSON Web Tokens)
-- **Frontend** :
-    - React
-    - Bootstrap
-    - Axios
-
-## Authentification et Sécurité
-
-- JWT : Gestion des sessions utilisateurs avec des tokens JWT. Les tokens sont stockés dans le localStorage.
-- Middleware d’authentification : Vérifie les tokens sur les routes protégées.
-- Sécurisation des accès :
-    - Redirection des utilisateurs non authentifiés vers la page de connexion.
-    - Règles d’autorisation en cours d’implémentation pour les fonctionnalités administratives.
-
-
+---
