@@ -7,6 +7,7 @@ import Login from "./Components/Login/Login.jsx";
 import Register from "./Components/Register/Register.jsx";
 import Admin from "./Components/Admin/Admin.jsx";
 import Annonce from "./Components/Annonce/Annonce.jsx";
+import AnnonceDetails from "./Components/Annonce/AnnonceDetails.jsx";
 import Wrapper from "./Components/Wrapper/Wrapper.jsx";
 import PrivateRoute from "./Components/Security/PrivateRoute.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -39,6 +40,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+              <Route path={"/annonces/:id"} element={<PrivateRoute><AnnonceDetails /></PrivateRoute>} />
           </Routes>
         </Wrapper>
       </BrowserRouter>
