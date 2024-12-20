@@ -7,7 +7,7 @@ app.use(cors());
 const PORT = 8080;
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/merntpsolo", {});
+mongoose.connect("mongodb://127.0.0.1:27017/mern_group", {});
 console.log("Connected to MongoDB");
 
 const routes = require("./routes");

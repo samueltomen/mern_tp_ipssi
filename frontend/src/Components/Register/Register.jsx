@@ -36,7 +36,7 @@ const Register = ({ onUserAdded, adminPage }) => {
         email: newUser.email,
         password: newUser.password,
       });
-      toast.success("User created successfully");
+      toast.success("Votre compte a été créé avec succès.");
       setNewUser({
         firstName: "",
         lastName: "",
@@ -50,16 +50,17 @@ const Register = ({ onUserAdded, adminPage }) => {
       navigate("/");
     } catch (error) {
       console.error(error);
-      toast.error("Error creating user. Please try again.");
+      toast.error("Erreur lors de la création du compte.");
     }
   };
 
   return (
-      <div className={`${adminPage ? "register-container-admin" : "register-container"}`}>
+    <div
+      className={`${adminPage ? "register-container-admin" : "register-container"}`}
+    >
       <div className="register-card">
         <div className="text-center mb-4">
           <h2 className="text-purple">S'inscrire</h2>
-          <p>Enter your credentials to continue</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-row">
@@ -67,7 +68,7 @@ const Register = ({ onUserAdded, adminPage }) => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="First Name"
+                placeholder="Prénom"
                 name="firstName"
                 value={newUser.firstName}
                 onChange={handleInputChange}
@@ -78,7 +79,7 @@ const Register = ({ onUserAdded, adminPage }) => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Last Name"
+                placeholder="Nom"
                 name="lastName"
                 value={newUser.lastName}
                 onChange={handleInputChange}
@@ -90,7 +91,7 @@ const Register = ({ onUserAdded, adminPage }) => {
             <input
               type="email"
               className="form-control"
-              placeholder="Email Address / Username"
+              placeholder="Email"
               name="email"
               value={newUser.email}
               onChange={handleInputChange}
@@ -101,7 +102,7 @@ const Register = ({ onUserAdded, adminPage }) => {
             <input
               type="password"
               className="form-control"
-              placeholder="Password"
+              placeholder="Mot de passe"
               name="password"
               value={newUser.password}
               onChange={handleInputChange}
@@ -118,7 +119,7 @@ const Register = ({ onUserAdded, adminPage }) => {
               required
             />
             <label className="form-check-label">
-              Agree with <a href="/terms">Terms & Conditions.</a>
+              Accepter <a href="/terms">les conditions d&#39;utilisation.</a>
             </label>
           </div>
           <button type="submit" className="btn-submit">
@@ -127,13 +128,12 @@ const Register = ({ onUserAdded, adminPage }) => {
         </form>
         <div className="login-footer">
           <p>
-            Already have an account? <a href="/">Sign in</a>
+            Vous avez déjà un compte ? <a href="/">Se connecter</a>
           </p>
         </div>
       </div>
     </div>
   );
 };
-
 
 export default Register;

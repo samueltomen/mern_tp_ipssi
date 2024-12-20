@@ -80,6 +80,7 @@ const deleteUser = async (req, res) => {
 const Login = async (req, res) => {
   try {
     const email = req.body.email.toLowerCase();
+    console.log(req.params)
     const user = await User.findOne({ email });
     const name = user.name;
 

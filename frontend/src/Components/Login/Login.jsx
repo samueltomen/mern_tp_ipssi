@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext.jsx";
 import axios from "axios";
@@ -19,10 +19,11 @@ const Login = () => {
         password,
       });
       toast.success(`Connexion réussie ${response.data.name} !`);
-      login(response.data.token); // Call the login function from AuthContext
+      login(response.data.token);
       navigate("/annonces");
     } catch (error) {
-      alert("Login failed: " + error.response.data);
+      toast.error("Erreur lors de la connexion");
+      console.log(error.response.data);
     }
   };
 
