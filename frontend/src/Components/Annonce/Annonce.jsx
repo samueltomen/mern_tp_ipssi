@@ -236,8 +236,9 @@ const Annonces = () => {
               <div className="annonce-card" key={annonce._id}>
                 <div className="card-image">
                   <img
-                      src={annonce.image || "/placeholder.jpg"}
+                      src={annonce.image || "../src/assets/bonnet.png"}
                       alt={annonce.title}
+                      style={{ width: "100%", objectFit: "cover" }}
                   />
                   <span className="card-category">{annonce.category}</span>
                 </div>
