@@ -1,0 +1,65 @@
+/* DataTable.css */
+.table-modern {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-modern th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+    padding: 1rem;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.table-modern td {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.table-modern tr:last-child td {
+    border-bottom: none;
+}
+
+.table-modern tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+}
+
+.btn-edit {
+    background-color: #fff3cd;
+    border: none;
+    color: #664d03;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    background-color: #ffe69c;
+    color: #664d03;
+    transform: translateY(-1px);
+}
+
+.btn-delete {
+    background-color: #f8d7da;
+    border: none;
+    color: #842029;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #f5c2c7;
+    color: #842029;
+    transform: translateY(-1px);
+}

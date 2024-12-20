@@ -82,69 +82,71 @@ const Admin = () => {
   return (
     <div className={"d-flex flex-column align-items-center"}>
       <h1 className={"text-center"}>Admin</h1>
-      <Register onUserAdded={handleUserAdded} />
-      <div>
-        <h2 className={"text-center mt-5"}>Utilisateurs</h2>
-        <table className={"table"}>
+      <Register onUserAdded={handleUserAdded} adminPage={true} />
+      <div className="w-75">
+        <h2 className={"text-center mb-3"}>Utilisateurs</h2>
+        <table className="table mb-5">
           <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Email</th>
-              <th>Actions</th>
-            </tr>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+          {users.map((user) => (
               <tr key={user._id}>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                  <div className={"d-flex gap-2"}>
+                  <div className="d-flex gap-2">
                     <button
-                      className={"btn btn-warning"}
-                      onClick={() => handleEditClick(user)}
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() => handleEditClick(user)}
                     >
+                      <i className="bi bi-pencil-square me-1"></i>
                       Modifier
                     </button>
                     <button
-                      className={"btn btn-danger"}
-                      onClick={() => deleteUser(user._id)}
+                        className="btn btn-outline-danger btn-sm opacity-75"
+                        onClick={() => deleteUser(user._id)}
                     >
+                      <i className="bi bi-trash me-1"></i>
                       Supprimer
                     </button>
                   </div>
                 </td>
               </tr>
-            ))}
+          ))}
           </tbody>
         </table>
       </div>
 
       {editingUser && (
-        <div className="modal fade show d-block" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Modifier Utilisateur</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setEditingUser(null)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <form onSubmit={updateUser}>
-                  <div className="mb-3">
-                    <label htmlFor="name" className="form-label">
-                      Nom
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="name"
-                      name="name"
-                      value={editingUser.name}
-                      onChange={handleInputChange}
+          <div className="modal fade show d-block" tabIndex="-1">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Modifier Utilisateur</h5>
+                  <button
+                      type="button"
+                      className="btn-close"
+                      onClick={() => setEditingUser(null)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={updateUser}>
+                    <div className="mb-3">
+                      <label htmlFor="name" className="form-label">
+                        Nom
+                      </label>
+                      <input
+                          type="text"
+                          className="form-control"
+                          id="name"
+                          name="name"
+                          value={editingUser.name}
+                          onChange={handleInputChange}
                     />
                   </div>
                   <div className="mb-3">
