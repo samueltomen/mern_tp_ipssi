@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Register.css";
 
-const Register = ({ onUserAdded }) => {
+const Register = ({ onUserAdded, adminPage }) => {
   const [newUser, setNewUser] = useState({
     firstName: "",
     lastName: "",
@@ -55,7 +55,7 @@ const Register = ({ onUserAdded }) => {
   };
 
   return (
-    <div className="register-container">
+      <div className={`${adminPage ? "register-container-admin" : "register-container"}`}>
       <div className="register-card">
         <div className="text-center mb-4">
           <h2 className="text-purple">S'inscrire</h2>
@@ -134,5 +134,6 @@ const Register = ({ onUserAdded }) => {
     </div>
   );
 };
+
 
 export default Register;
