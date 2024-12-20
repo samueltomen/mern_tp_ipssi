@@ -55,8 +55,7 @@ cd mern_tp_ipssi
    ```
 3. Créez un fichier `.env` pour la configuration des variables d'environnement :
    ```
-   PORT=5000
-   MONGO_URI=your_mongo_connection_string
+   JWT_EXPIRES_IN=your_expiration_date
    JWT_SECRET=your_secret_key
    ```
 4. Lancez le serveur backend :
@@ -82,7 +81,7 @@ cd mern_tp_ipssi
    ```bash
    npm start
    ```
-   Le frontend sera disponible à l'adresse : `http://localhost:8080`
+   Le frontend sera disponible à l'adresse : `http://localhost:5173`
 
 ---
 
