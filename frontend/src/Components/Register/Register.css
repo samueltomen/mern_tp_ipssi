@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.register-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 400px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 2rem;
+    color: #6f42c1;
+}
+
+.text-purple {
+    color: #6f42c1;
+}
+
+.btn-google {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    text-transform: none;
+}
+
+.btn-google i {
+    margin-right: 8px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+    color: #6c757d;
+}
+
+.divider span {
+    padding: 0 1rem;
+    font-size: 0.9rem;
+}
+
+.form-control {
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.password-strength {
+    color: #ffc107;
+    font-size: 0.8rem;
+    position: absolute;
+    top: 38px;
+    right: 10px;
+}
+
+.btn-purple {
+    background: #6f42c1;
+    color: white;
+    border: none;
+    text-transform: none;
+}
+
+.btn-purple:hover {
+    background: #5a34a3;
+}
+
+.form-check-label a {
+    color: #6f42c1;
+    text-decoration: none;
+}
+
+.form-check-label a:hover {
+    text-decoration: underline;
+}
+
+.login-footer {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+.login-footer a {
+    color: #6f42c1;
+    text-decoration: none;
+}
