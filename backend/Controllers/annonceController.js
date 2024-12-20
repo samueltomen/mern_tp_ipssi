@@ -1,44 +1,23 @@
 const Annonce = require("../Models/annonceModel");
 
-// const createAnnonce = async (req, res) => {
-//   const authorId = req.user.id;
-//   try {
-//     const annonce = new Annonce({
-//       ...req.body,
-//       author: authorId,
-//     });
-//     if (!annonce) {
-//       return res.status(400).send("Merci de remplir tous les champs");
-//     }
-//     await annonce.save();
-//     const populatedAnnonce = await Annonce.findById(annonce._id).populate(
-//       "author",
-//       "username email",
-//     );
-//     res.status(201).send(populatedAnnonce);
-//   } catch (error) {
-//     res.status(400).send({ message: error.message });
-//   }
-// };
-
 const createAnnonce = async (req, res) => {
-  const authorId = req.user.id;
-  const authorEmail = req.user.email;
+  const authorId = req.user.id; // ID de l'utilisateur connecté
   try {
-    const product = new Annonce({
+    const annonce = new Annonce({
       ...req.body,
       author: authorId,
     });
-    console.log(product);
-    if (!product) {
+
+    if (!annonce) {
       return res.status(400).send("Merci de remplir tous les champs");
     }
-    await product.save();
-    const populatedProduct = await Annonce.findById(product._id).populate(
-      "author",
-      "name email",
+
+    await annonce.save();
+    const populatedAnnonce = await Annonce.findById(annonce._id).populate(
+        "author",
+        "name email", // Inclure le nom et l'email de l'auteur
     );
-    res.status(201).send(populatedProduct);
+    res.status(201).send(populatedAnnonce);
   } catch (error) {
     res.status(400).send({ message: error.message });
   }
@@ -46,15 +25,18 @@ const createAnnonce = async (req, res) => {
 
 const getAnnonces = async (req, res) => {
   try {
+    const { title, category, description, search } = req.query;
+
     const filter = {};
-    if (req.query.title) {
-      filter.title = { $regex: req.query.title, $options: "i" };
-    }
-    if (req.query.category) {
-      filter.category = { $regex: req.query.category, $options: "i" };
-    }
-    if (req.query.description) {
-      filter.description = { $regex: req.query.description, $options: "i" };
+
+    if (title) filter.title = { $regex: title, $options: "i" };
+    if (category) filter.category = { $regex: category, $options: "i" };
+    if (description) filter.description = { $regex: description, $options: "i" };
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
     }
 
     const annonces = await Annonce.find(filter).populate("author", "email");
@@ -68,8 +50,8 @@ const getAnnonces = async (req, res) => {
 const getAnnonceById = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.annonceId).populate(
-      "author",
-      "username email",
+        "author",
+        "name email",
     );
     if (!annonce) {
       return res.status(404).send({ error: "Annonce introuvable" });
@@ -81,18 +63,48 @@ const getAnnonceById = async (req, res) => {
 };
 
 const updateAnnonce = async (req, res) => {
+  const userId = req.user.id; // ID de l'utilisateur connecté
   try {
-    const annonce = await Annonce.findByIdAndUpdate(
-      req.params.annonceId,
-      req.body,
-      {
-        new: true,
-      },
-    );
+    const annonce = await Annonce.findById(req.params.annonceId);
+
     if (!annonce) {
-      return res.status(404).send({ error: "Annonce introuvable" });
+      return res.status(404).send({ message: "Annonce introuvable" });
     }
-    res.status(200).send(annonce);
+
+    // Vérifier si l'utilisateur connecté est l'auteur de l'annonce
+    if (annonce.author.toString() !== userId) {
+      return res.status(403).send({ message: "Action non autorisée" });
+    }
+
+    // Mise à jour des champs
+    Object.assign(annonce, req.body);
+    await annonce.save();
+
+    const updatedAnnonce = await Annonce.findById(
+        req.params.annonceId,
+    ).populate("author", "name email");
+    res.status(200).send(updatedAnnonce);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+const deleteAnnonce = async (req, res) => {
+  const userId = req.user.id; // ID de l'utilisateur connecté
+  try {
+    const annonce = await Annonce.findById(req.params.annonceId);
+
+    if (!annonce) {
+      return res.status(404).send({ message: "Annonce introuvable" });
+    }
+
+    // Vérifier si l'utilisateur connecté est l'auteur de l'annonce
+    if (annonce.author.toString() !== userId) {
+      return res.status(403).send({ message: "Action non autorisée" });
+    }
+
+    await Annonce.findByIdAndDelete(req.params.annonceId);
+    res.status(200).send({ message: "Annonce supprimée avec succès" });
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -100,26 +112,14 @@ const updateAnnonce = async (req, res) => {
 
 const getAnnonceByUserId = async (req, res) => {
   try {
-    const annonce = await Annonce.find({ author: req.params.userId }).populate(
-      "author",
-      "username email",
+    const annonces = await Annonce.find({ author: req.params.userId }).populate(
+        "author",
+        "name email",
     );
-    if (!annonce) {
-      return res.status(404).send({ error: "Annonce introuvable" });
+    if (!annonces) {
+      return res.status(404).send({ error: "Aucune annonce trouvée" });
     }
-    res.status(200).send(annonce);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
-
-const deleteAnnonce = async (req, res) => {
-  try {
-    const annonce = await Annonce.findByIdAndDelete(req.params.annonceId);
-    if (!annonce) {
-      return res.status(404).send({ error: "Annonce introuvable" });
-    }
-    res.status(200).send({ message: "Annonce supprimée" });
+    res.status(200).send(annonces);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }

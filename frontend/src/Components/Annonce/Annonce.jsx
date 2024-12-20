@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import  { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "./Annonce.css";
 
 const Annonces = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
   const [annonces, setAnnonces] = useState([]);
-  const [selectedAnnonce, setSelectedAnnonce] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [newAnnonce, setNewAnnonce] = useState({
     title: "",
     description: "",
@@ -17,6 +19,7 @@ const Annonces = () => {
     category: "",
   });
   const [editingAnnonceId, setEditingAnnonceId] = useState(null); // ID de l'annonce en cours de modification
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllAnnonces();
@@ -59,18 +62,18 @@ const Annonces = () => {
       // Mode modification
       try {
         const response = await axios.put(
-          `http://localhost:8080/annonces/${editingAnnonceId}`,
-          newAnnonce,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+            `http://localhost:8080/annonces/${editingAnnonceId}`,
+            newAnnonce,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             },
-          },
         );
         setAnnonces((prevAnnonces) =>
-          prevAnnonces.map((annonce) =>
-            annonce._id === editingAnnonceId ? response.data : annonce,
-          ),
+            prevAnnonces.map((annonce) =>
+                annonce._id === editingAnnonceId ? response.data : annonce,
+            ),
         );
         toast.success("Annonce modifiée avec succès !");
       } catch (error) {
@@ -80,33 +83,32 @@ const Annonces = () => {
     } else {
       // Mode création
       try {
-        console.log("newAnnonce", newAnnonce);
         const response = await axios.post(
-          "http://localhost:8080/annonces",
-          newAnnonce,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+            "http://localhost:8080/annonces",
+            newAnnonce,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             },
-          },
         );
-        // Au lieu de juste push l'annonce, on va rappeler getAllAnnonces pour re-synchroniser tout
+        setAnnonces((prevAnnonces) => [...prevAnnonces, response.data]);
+        extractCategories([...annonces, response.data]);
         toast.success("Annonce créée avec succès !");
-        await getAllAnnonces();
       } catch (error) {
         console.error("Error creating annonce:", error);
         toast.error("Erreur lors de la création de l'annonce.");
       }
     }
 
-    // Réinitialisation du formulaire et du mode édition
+    // Réinitialisation du formulaire
     setNewAnnonce({
       title: "",
       description: "",
       price: "",
       category: "",
     });
-    setEditingAnnonceId(null);
+    setEditingAnnonceId(null); // Réinitialiser le mode édition
     closeModal("createAnnonceModal");
   };
 
@@ -121,11 +123,6 @@ const Annonces = () => {
     openModal("createAnnonceModal");
   };
 
-  const handleShowModal = (annonce) => {
-    setSelectedAnnonce(annonce);
-    openModal("viewAnnonceModal");
-  };
-
   const handleDeleteAnnonce = async (id) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette annonce ?")) {
       try {
@@ -136,7 +133,7 @@ const Annonces = () => {
           },
         });
         setAnnonces((prevAnnonces) =>
-          prevAnnonces.filter((annonce) => annonce._id !== id),
+            prevAnnonces.filter((annonce) => annonce._id !== id),
         );
         extractCategories(annonces.filter((annonce) => annonce._id !== id));
         toast.success("Annonce supprimée avec succès !");
@@ -145,6 +142,10 @@ const Annonces = () => {
         toast.error("Erreur lors de la suppression de l'annonce.");
       }
     }
+  };
+
+  const handleViewDetails = (id) => {
+    navigate(`/annonces/${id}`);
   };
 
   const openModal = (modalId) => {
@@ -159,200 +160,210 @@ const Annonces = () => {
     document.body.classList.remove("modal-open");
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(
+          `http://localhost:8080/annonces?search=${searchQuery}`
+      );
+      setAnnonces(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la recherche :", error);
+    }
+  };
+
   const filteredAnnonces = selectedCategory
-    ? annonces.filter((annonce) => annonce.category === selectedCategory)
-    : annonces;
+      ? annonces.filter((annonce) => annonce.category === selectedCategory)
+      : annonces;
 
   return (
-    <div className="container mt-5">
-      <ToastContainer />
-      <h1 className="text-center mb-4">Liste des Annonces</h1>
-      <div className="mb-4">
-        <select
-          className="form-select"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-        >
-          <option value="">Toutes les catégories</option>
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        {/* Bouton Créer une annonce : On réinitialise le mode édition et le formulaire */}
-        <button
-          className="btn btn-success"
-          onClick={() => {
-            setEditingAnnonceId(null);
-            setNewAnnonce({
-              title: "",
-              description: "",
-              price: "",
-              category: "",
-            });
-            openModal("createAnnonceModal");
-          }}
-        >
-          Créer une annonce
-        </button>
-      </div>
-      <div className="row">
-        {filteredAnnonces.map((annonce) => (
-          <div className="col-md-4" key={annonce._id}>
-            <div className="card mb-4 shadow-sm">
-              <div className="card-body text-center">
-                <h5 className="card-title">{annonce.title}</h5>
-                <p className="card-text">{annonce.description}</p>
-                <p className="card-text">
-                  <strong>{annonce.price} €</strong>
-                </p>
-                <div className="d-flex justify-content-center">
-                  <button
-                    className="btn btn-primary me-2"
-                    onClick={() => handleShowModal(annonce)}
-                  >
-                    Voir plus
-                  </button>
-                  {isAuthenticated && (
-                    <>
-                      <button
-                        className="btn btn-warning me-2"
-                        onClick={() => handleEditAnnonce(annonce)}
-                      >
-                        Modifier
-                      </button>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteAnnonce(annonce._id)}
-                      >
-                        Supprimer
-                      </button>
-                    </>
-                  )}
+      <div className="container mt-5">
+        <ToastContainer/>
+        <h1 className="text-center mb-4">Liste des Annonces</h1>
+        {/* Barre de recherche */}
+        <div className="search-bar-container mb-4">
+          <form onSubmit={handleSearchSubmit} className="d-flex">
+            <input
+                type="text"
+                className="form-control me-2 search-custom"
+                placeholder="Rechercher une annonce..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+            />
+            <button type="submit" className="btn btn-primary">
+              Rechercher
+            </button>
+          </form>
+        </div>
+        <div className="mb-4 d-flex justify-content-between">
+          <select
+              className="form-select w-50"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+          >
+            <option value="">Toutes les catégories</option>
+            {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+            ))}
+          </select>
+          {isAuthenticated && (
+              <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    setNewAnnonce({
+                      title: "",
+                      description: "",
+                      price: "",
+                      category: "",
+                    });
+                    setEditingAnnonceId(null);
+                    openModal("createAnnonceModal");
+                  }}
+              >
+                <i className={"bi bi-plus-lg me-2"}></i>
+                Créer une annonce
+              </button>
+          )}
+        </div>
+        <div className="annonces-grid">
+          {filteredAnnonces.map((annonce) => (
+              <div className="annonce-card" key={annonce._id}>
+                <div className="card-image">
+                  <img
+                      src={annonce.image || "/placeholder.jpg"}
+                      alt={annonce.title}
+                  />
+                  <span className="card-category">{annonce.category}</span>
                 </div>
+                <div className="card-content">
+                  <h5 className="card-title">{annonce.title}</h5>
+                  <p className="card-description">
+                    {annonce.description.slice(0, 100)}...
+                  </p>
+                  <p className="card-date">
+                    {new Date(annonce.createdAt).toLocaleDateString()}
+                  </p>
+                  <div className="card-actions">
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handleViewDetails(annonce._id)}
+                    >
+                      Voir plus
+                    </button>
+                    {isAuthenticated && user?.id === annonce.author?._id && (
+                        <>
+                          <button
+                              className="btn btn-warning me-2"
+                              onClick={() => handleEditAnnonce(annonce)}
+                          >
+                            Modifier
+                          </button>
+                          <button
+                              className="btn btn-danger"
+                              onClick={() => handleDeleteAnnonce(annonce._id)}
+                          >
+                            Supprimer
+                          </button>
+                        </>
+                    )}
+                  </div>
+                </div>
+              </div>
+          ))}
+        </div>
+
+        {/* Modal Créer / Modifier */}
+        <div
+            className="modal fade"
+            id="createAnnonceModal"
+            tabIndex="-1"
+            aria-labelledby="createAnnonceModalLabel"
+            aria-hidden="true"
+        >
+          <div className="modal-dialog modal-custom">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="createAnnonceModalLabel">
+                  {editingAnnonceId
+                      ? "Modifier l'annonce"
+                      : "Créer une nouvelle annonce"}
+                </h5>
+                <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => closeModal("createAnnonceModal")}
+                    aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={handleCreateOrUpdateAnnonce}>
+                  <div className="mb-3">
+                    <label className="form-label">Titre</label>
+                    <input
+                        type="text"
+                        className="form-control input-custom"
+                        name="title"
+                        value={newAnnonce.title}
+                        onChange={handleInputChange}
+                        required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Description</label>
+                    <textarea
+                        className="form-control input-custom"
+                        name="description"
+                        value={newAnnonce.description}
+                        onChange={handleInputChange}
+                        required
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Prix</label>
+                    <input
+                        type="number"
+                        className="form-control input-custom"
+                        name="price"
+                        value={newAnnonce.price}
+                        onChange={handleInputChange}
+                        required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Catégorie</label>
+                    <input
+                        type="text"
+                        className="form-control input-custom"
+                        name="category"
+                        value={newAnnonce.category}
+                        onChange={handleInputChange}
+                        required
+                    />
+                  </div>
+                  <div className="modal-actions">
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => closeModal("createAnnonceModal")}
+                    >
+                      Annuler
+                    </button>
+                    <button type="submit" className="btn btn-primary">
+                      {editingAnnonceId ? "Modifier" : "Créer"}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Modal Voir plus */}
-      <div
-        className="modal fade"
-        id="viewAnnonceModal"
-        tabIndex="-1"
-        aria-labelledby="viewAnnonceModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="viewAnnonceModalLabel">
-                {selectedAnnonce?.title}
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => closeModal("viewAnnonceModal")}
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <p>{selectedAnnonce?.description}</p>
-              <p>
-                <strong>Prix :</strong> {selectedAnnonce?.price} €
-              </p>
-              <p>
-                <strong>Catégorie :</strong> {selectedAnnonce?.category}
-              </p>
-              <p>
-                <strong>Auteur :</strong> {selectedAnnonce?.author?.email}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
-
-      {/* Modal Créer / Modifier */}
-      <div
-        className="modal fade"
-        id="createAnnonceModal"
-        tabIndex="-1"
-        aria-labelledby="createAnnonceModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="createAnnonceModalLabel">
-                {editingAnnonceId
-                  ? "Modifier l'annonce"
-                  : "Créer une nouvelle annonce"}
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => closeModal("createAnnonceModal")}
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <form onSubmit={handleCreateOrUpdateAnnonce}>
-                <div className="mb-3">
-                  <label className="form-label">Titre</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="title"
-                    value={newAnnonce.title}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Description</label>
-                  <textarea
-                    className="form-control"
-                    name="description"
-                    value={newAnnonce.description}
-                    onChange={handleInputChange}
-                    required
-                  ></textarea>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Prix</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="price"
-                    value={newAnnonce.price}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Catégorie</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="category"
-                    value={newAnnonce.category}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                  {editingAnnonceId ? "Modifier" : "Créer"}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 
