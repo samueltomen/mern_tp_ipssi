@@ -37,6 +37,7 @@
 .search-bar-container button:hover {
     background-color: #5a369d;
 }
+
 .search-custom {
     margin-bottom: 0px;
 }
@@ -54,7 +55,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: space-between;
+    justify-content: start;
 }
 
 /* Carte individuelle */

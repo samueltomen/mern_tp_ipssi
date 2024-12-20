@@ -14,8 +14,8 @@ const createAnnonce = async (req, res) => {
 
     await annonce.save();
     const populatedAnnonce = await Annonce.findById(annonce._id).populate(
-        "author",
-        "name email", // Inclure le nom et l'email de l'auteur
+      "author",
+      "name email", // Inclure le nom et l'email de l'auteur
     );
     res.status(201).send(populatedAnnonce);
   } catch (error) {
@@ -31,7 +31,8 @@ const getAnnonces = async (req, res) => {
 
     if (title) filter.title = { $regex: title, $options: "i" };
     if (category) filter.category = { $regex: category, $options: "i" };
-    if (description) filter.description = { $regex: description, $options: "i" };
+    if (description)
+      filter.description = { $regex: description, $options: "i" };
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: "i" } },
@@ -50,8 +51,8 @@ const getAnnonces = async (req, res) => {
 const getAnnonceById = async (req, res) => {
   try {
     const annonce = await Annonce.findById(req.params.annonceId).populate(
-        "author",
-        "name email",
+      "author",
+      "name email",
     );
     if (!annonce) {
       return res.status(404).send({ error: "Annonce introuvable" });
@@ -81,7 +82,7 @@ const updateAnnonce = async (req, res) => {
     await annonce.save();
 
     const updatedAnnonce = await Annonce.findById(
-        req.params.annonceId,
+      req.params.annonceId,
     ).populate("author", "name email");
     res.status(200).send(updatedAnnonce);
   } catch (error) {
@@ -111,10 +112,11 @@ const deleteAnnonce = async (req, res) => {
 };
 
 const getAnnonceByUserId = async (req, res) => {
+  console.log(req.user.id);
   try {
-    const annonces = await Annonce.find({ author: req.params.userId }).populate(
-        "author",
-        "name email",
+    const annonces = await Annonce.find({ author: req.user.id }).populate(
+      "author",
+      "id email",
     );
     if (!annonces) {
       return res.status(404).send({ error: "Aucune annonce trouvée" });

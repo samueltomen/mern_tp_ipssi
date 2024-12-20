@@ -12,6 +12,7 @@ import Wrapper from "./Components/Wrapper/Wrapper.jsx";
 import PrivateRoute from "./Components/Security/PrivateRoute.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import Account from "./Components/Account/Account.jsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Routes>
             <Route path={"/"} element={<Login />} />
             <Route path={"/register"} element={<Register />} />
+              <Route path={"/my-account"} element={<Account />} />
             <Route
               path={"/admin"}
               element={

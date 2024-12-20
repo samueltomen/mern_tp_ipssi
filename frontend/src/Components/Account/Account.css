@@ -1,0 +1,70 @@
+/* Account.css */
+.account-container {
+    min-height: calc(100vh - 70px); /* Ajustez selon la hauteur de votre navbar */
+}
+
+.account-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.table th {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.product-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.table > :not(caption) > * > * {
+    padding: 1rem;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 10px;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.form-control {
+    padding: 0.6rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+}

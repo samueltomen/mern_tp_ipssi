@@ -29,7 +29,7 @@ router.post("/annonces", authMiddleware, createAnnonce);
 router.get("/annonces", getAnnonces);
 router.get("/annonces/:annonceId", getAnnonceById);
 router.put("/annonces/:annonceId", authMiddleware, updateAnnonce);
-router.get("/annonces/user/:userId", getAnnonceByUserId);
+router.get("/annonces/user/:userId", authMiddleware, getAnnonceByUserId);
 router.delete("/annonces/:annonceId", authMiddleware, deleteAnnonce);
 
 module.exports = router;
