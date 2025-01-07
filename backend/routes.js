@@ -16,7 +16,7 @@ const {
   deleteAnnonce,
 } = require("./Controllers/annonceController");
 
-const authMiddleware = require("./Middlewares/authMiddleware");
+const authMiddleware = require("./Middlewares/AuthMiddleware");
 
 router.post("/users", registerUser);
 router.get("/users", getUsers);

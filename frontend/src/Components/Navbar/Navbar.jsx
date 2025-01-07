@@ -61,6 +61,12 @@ const Navbar = () => {
                         Déconnexion
                       </button>
                     </li>
+
+
+
+
+
+
                     <li className="nav-item ms-2">
                       <div className="avatar-circle">
                         <span>U</span>
