@@ -14,3 +14,7 @@ spec:
       env:
         - name: MONGO_URI
           value: "mongodb://mongo-srv:27017/mern_tp_ipssi"
+        - name: JWT_SECRET
+          value: "sDeZHsH333***"
+        - name: JWT_EXPIRES_IN
+          value: "1d"

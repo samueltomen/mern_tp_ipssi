@@ -7,11 +7,12 @@ import { toast } from "react-toastify";
 const Admin = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const getAllUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://127.0.0.1:8080/users", {
+      const response = await axios.get(`${API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -40,7 +41,7 @@ const Admin = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `http://localhost:8080/users/${editingUser._id}`,
+        `${API_URL}/users/${editingUser._id}`,
         editingUser,
         {
           headers: {
@@ -63,7 +64,7 @@ const Admin = () => {
   const deleteUser = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8080/users/${id}`, {
+      await axios.delete(`${API_URL}/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

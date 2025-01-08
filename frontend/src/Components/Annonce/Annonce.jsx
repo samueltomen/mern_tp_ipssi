@@ -25,9 +25,11 @@ const Annonces = () => {
     getAllAnnonces();
   }, []);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const getAllAnnonces = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/annonces");
+      const response = await axios.get(`${API_URL}/annonces`);
       setAnnonces(response.data);
       extractCategories(response.data);
     } catch (error) {
@@ -62,7 +64,7 @@ const Annonces = () => {
       // Mode modification
       try {
         const response = await axios.put(
-            `http://localhost:8080/annonces/${editingAnnonceId}`,
+            `${API_URL}/annonces/${editingAnnonceId}`,
             newAnnonce,
             {
               headers: {
@@ -84,7 +86,7 @@ const Annonces = () => {
       // Mode création
       try {
         const response = await axios.post(
-            "http://localhost:8080/annonces",
+            `${API_URL}/annonces`,
             newAnnonce,
             {
               headers: {
@@ -127,7 +129,7 @@ const Annonces = () => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette annonce ?")) {
       try {
         const token = localStorage.getItem("token");
-        await axios.delete(`http://localhost:8080/annonces/${id}`, {
+        await axios.delete(`${API_URL}/annonces/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -168,7 +170,7 @@ const Annonces = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-          `http://localhost:8080/annonces?search=${searchQuery}`
+          `${API_URL}/annonces?search=${searchQuery}`
       );
       setAnnonces(response.data);
     } catch (error) {

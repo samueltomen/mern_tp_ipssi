@@ -12,9 +12,11 @@ const AnnonceDetails = () => {
     fetchAnnonceDetails();
   }, []);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const fetchAnnonceDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/annonces/${id}`);
+      const response = await axios.get(`${API_URL}/annonces/${id}`);
       setAnnonce(response.data);
     } catch (error) {
       console.error("Error fetching annonce details:", error);

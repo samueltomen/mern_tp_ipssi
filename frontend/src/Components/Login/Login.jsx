@@ -11,10 +11,12 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/login", {
+      const response = await axios.post(`${API_URL}/login`, {
         email,
         password,
       });
