@@ -14,6 +14,8 @@ const Register = ({ onUserAdded, adminPage }) => {
   });
   const navigate = useNavigate();
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewUser((prevUser) => ({
@@ -31,7 +33,7 @@ const Register = ({ onUserAdded, adminPage }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/users", {
+      const response = await axios.post(`${API_URL}/users`, {
         name: `${newUser.firstName} ${newUser.lastName}`,
         email: newUser.email,
         password: newUser.password,

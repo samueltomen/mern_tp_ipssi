@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod
+  labels:
+    app: backend
+spec:
+  containers:
+    - name: backend-container
+      image: backend-image:latest
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 8080
+      env:
+        - name: MONGO_URI
+          value: "mongodb://mongo-srv:27017/mern_tp_ipssi"
